@@ -1,49 +1,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-
-function Square(props) {
-  return (
-    <button className="square" onClick={props.onClick}>
-      {props.value}
-    </button>
-  )
-}
-
-class Board extends React.Component {
-    
-  renderSquare(i) {
-    return (
-      <Square
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-      />
-      );
-  }
-
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
-}
+import ModalClass from './modal.js';
 
 class Game extends React.Component {
   constructor(props){
@@ -54,7 +14,49 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      mainMenu: true,
+      playerName: '',
+      player2Name: '',
+      cpu: false,
     };
+    this.startGame = this.startGame.bind(this);
+    this.playCpu = this.playCpu.bind(this);
+    this.playHuman = this.playHuman.bind(this);
+  }
+
+  startGame() {
+    let gracz1 = document.getElementById('player1').value;
+    let gracz2 = document.getElementById('player2').value;
+
+    (gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
+    this.setState({ playerName: gracz1})
+    this.setState({ mainMenu: false });
+  }
+
+  playCpu() {
+    let hide = document.getElementById('p1');
+    hide.classList.remove('hide');
+    let hideButton = document.getElementById('hideButton');
+    hideButton.classList.remove('hide');
+
+    var toHide = document.getElementsByClassName('toHide');
+    for(let i = 0; i < toHide.length; i++){
+      toHide[i].classList.add('hide');
+    }
+    this.setState({ cpu: true });
+  }
+  playHuman() {
+    let hide = document.getElementsByClassName('hide');
+    for (var index of hide) {
+      index.classList.remove('hide');
+    }
+    for (var index2 of hide) {
+      index2.classList.remove('hide');
+    }
+    var toHide = document.getElementsByClassName('toHide');
+    for(let i = 0; i < toHide.length; i++){
+      toHide[i].classList.add('hide');
+    }
   }
 
   handleClick(i) {
@@ -102,19 +104,83 @@ class Game extends React.Component {
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
+
+    let View = this.state.mainMenu ?
+      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} /> :
+      <Board squares={current.squares} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
+
+    let History = this.state.mainMenu ? '' : <div className="history"><ol>{moves}</ol></div>
+
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board
-          squares={current.squares}
-          onClick={(i) => this.handleClick(i)}
-          />
+      <div className="game row">
+          <div className="col-9"><Header gracz1={this.state.playerName}/></div> 
+        <div className="jumbotron">
+          <div className="tic-tac-field">
+            {View}
+          </div>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
+            
+      <div className="statistic">
+      <div className="col-6">{History}</div>
+      <Statistic/>
       </div>
+      </div>
+    );
+
+}}
+
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  )
+}
+
+class Header extends React.Component{
+  render() {
+    return (
+      <div>Nazwa - {this.props.gracz1}</div>
+    )}
+}
+
+class Statistic extends React.Component{
+  render() {
+    return (
+      <div>Statystyki</div>
+    )}
+}
+
+class Board extends React.Component {
+
+  renderSquare(i) {
+    return (
+      <Square
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
+      />
+    );
+  }
+
+  render() {
+    return (
+      
+      <div className="test">
+        <div className="game-info">
+        <div>{this.props.status}</div>
+        </div>
+
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
+          {this.renderSquare(3)}
+          {this.renderSquare(4)}
+          {this.renderSquare(5)}
+          {this.renderSquare(6)}
+          {this.renderSquare(7)}
+          {this.renderSquare(8)}
+      </div>
+      
     );
   }
 }
