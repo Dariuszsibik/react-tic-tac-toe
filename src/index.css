@@ -28,6 +28,25 @@ body {
   outline: none;
 }
 
+.game-board .game-field {
+  border-radius: 6px;
+  width: 300px;
+  height: 300px;
+  padding: 5px;
+}
+
+.square {
+  background-color: #9A8297;
+  margin: 5px;
+  width: 90px;
+  height: 90px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: realtive;
+
+}
+
 
 .hide {
   display: none;
