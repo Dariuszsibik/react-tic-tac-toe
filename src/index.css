@@ -1,104 +1,31 @@
 body {
-  background-color: #E6E6E6;
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
 }
-body .jumbotron {
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: white;
-  border-radius: 6px;
-  width: 400px;
-  height: 400px;
-  padding: 5px;
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
 }
-body .jumbotron .tic-tac-toe--end-jumbotron-popover {
-  width: 300px;
-  height: 300px;
-  background-color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 6px;
-  transition: visibility 0s 0.3s, opacity 0.3s linear;
-  opacity: 1;
-  visibility: visible;
-}
-body .jumbotron .tic-tac-toe--end-jumbotron-popover.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-body .jumbotron .tic-tac-toe--end-jumbotron-popover .tic-tac-toe--new-jumbotron-button {
-  height: 20px;
-  background-color: #d82e2e;
-  border-radius: 20px;
-  color: white;
-  margin: auto;
-  padding: 10px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  transition: background-color 0.3s;
-}
-body .jumbotron .tic-tac-toe--end-jumbotron-popover .tic-tac-toe--new-jumbotron-button:hover {
-  background-color: rgb(104, 150, 61);
-}
-body .jumbotron .tic-tac-toe--end-jumbotron-popover h1.tic-tac-toe--title-label {
-  color: rgb(42, 208, 92);
-  margin: 30px auto;
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
   text-align: center;
+  width: 34px;
 }
-body .jumbotron .tic-tac-field {
-  display: flex;
-  flex-wrap: wrap;
-}
-body .jumbotron .tic-tac-field .square{
-  background-color: rgb(182, 69, 61);
-  margin: 5px;
-  width: 90px;
-  height: 90px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  position: relative;
-}
-body .jumbotron .tic-tac-field .square:hover {
-  background-color: #D0782A;
-}
-body .jumbotron .tic-tac-field .square.xSymbol:before, body .jumbotron .tic-tac-field .square.xSymbol:after {
-  position: absolute;
-  width: 6px;
-  height: 50px;
-  background-color: white;
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 3px;
-}
-body .jumbotron .tic-tac-field .square.xSymbol:before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-body .jumbotron .tic-tac-field .square.xSymbol:after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-body .jumbotron .tic-tac-field .square.oSymbol:after {
-  position: absolute;
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  border: solid 6px white;
-  width: 44px;
-  height: 44px;
-  transform: translate(-50%, -50%);
+
+.square:focus {
+  outline: none;
 }
 
 
@@ -110,3 +37,22 @@ body .jumbotron .tic-tac-field .square.oSymbol:after {
   display: display;
 }
 
+.square {
+  border: 1px solid black;
+}
+
+.statistic {
+  border: 1px solid black;
+}
+
+.tic-tac-field {
+  border: 1px solid black;
+}
+
+.col-sm-8 {
+  border: 1px solid black;
+}
+
+.col-sm-4 {
+  border: 1px solid black;
+}

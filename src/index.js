@@ -109,21 +109,25 @@ class Game extends React.Component {
       <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} /> :
       <Board squares={current.squares} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
 
-    let History = this.state.mainMenu ? '' : <div className="history"><ol>{moves}</ol></div>
+    let History = this.state.mainMenu ? '' : <div className="history"><ul>{moves}</ul></div>
 
     return (
-      <div className="game row">
-          <div className="col-9"><Header gracz1={this.state.playerName}/></div> 
-        <div className="jumbotron">
-          <div className="tic-tac-field">
-            {View}
-          </div>
+      <div className="game">
+          <nav className="navbar navbar-dark bg-primary"><span className="navbar-text">
+            <Header gracz1={this.state.playerName}/>
+            </span>
+            </nav> 
+    
+          <div className="row">    
+            <div className="col-sm-8">
+              <div className="tic-tac-field d-flex justify-content-center">
+                {View}
+              </div>
+            </div>
+              
+          <div className="col-sm-4"><Statistic/></div>
         </div>
-            
-      <div className="statistic">
-      <div className="col-6">{History}</div>
-      <Statistic/>
-      </div>
+
       </div>
     );
 
@@ -147,7 +151,27 @@ class Header extends React.Component{
 class Statistic extends React.Component{
   render() {
     return (
-      <div>Statystyki</div>
+      <div className="statistic">
+        <ul className="list-group">
+          <li className="list-group-item d-flex  justify-content-between align-items-center active">
+            Statistics:
+            <span className="badge badge-primary badge-pill"></span>
+          </li> 
+          <li className="list-group-item d-flex justify-content-between align-items-center ">
+            Player1 wins: 
+            <span className="badge badge-primary badge-pill">12</span>
+          </li>  
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            Player2 wins: 
+            <span className="badge badge-primary badge-pill">4</span>
+          </li> 
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            Draw:
+            <span className="badge badge-primary badge-pill">1</span>
+          </li> 
+
+        </ul>
+      </div>
     )}
 }
 
@@ -165,20 +189,28 @@ class Board extends React.Component {
   render() {
     return (
       
-      <div className="test">
+      <div className="game-field">
         <div className="game-info">
         <div>{this.props.status}</div>
         </div>
 
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+        <div className="game-board">
+          <div className="board-row">
+            {this.renderSquare(0)}
+            {this.renderSquare(1)}
+            {this.renderSquare(2)}
+          </div>
+          <div className="board-row">
           {this.renderSquare(3)}
           {this.renderSquare(4)}
           {this.renderSquare(5)}
+          </div>
+          <div className="board-row">
           {this.renderSquare(6)}
           {this.renderSquare(7)}
           {this.renderSquare(8)}
+          </div>
+        </div>
       </div>
       
     );
