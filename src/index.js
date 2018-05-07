@@ -18,6 +18,7 @@ class Game extends React.Component {
       playerName: '',
       player2Name: '',
       cpu: false,
+      xPlayer1: true
     };
     this.startGame = this.startGame.bind(this);
     this.playCpu = this.playCpu.bind(this);
@@ -63,6 +64,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length -1];
     const squares = current.squares.slice();
+    
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -97,12 +99,20 @@ class Game extends React.Component {
           </li>
         );
     });
-
+    
+    let xPlayer = this.state.xPlayer1 ? this.state.playerName : this.state.player2Name 
+    let oPlayer;
+    if (this.state.xPlayer1 === false ){
+      oPlayer = this.state.player2Name;
+    } else {
+      oPlayer = this.state.cpu ? 'Cpu'  : this.state.player2Name
+    }
+    
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next player: ' + (this.state.xIsNext ? xPlayer : oPlayer);
     }
 
     let View = this.state.mainMenu ?
@@ -125,7 +135,7 @@ class Game extends React.Component {
               </div>
             </div>
               
-          <div className="col-sm-4"><Statistic/></div>
+          <div className="col-sm-4"><Statistic player1={this.state.playerName} player2Name={this.state.player2Name} cpu={this.state.cpu}/></div>
         </div>
 
       </div>
@@ -150,6 +160,9 @@ class Header extends React.Component{
 
 class Statistic extends React.Component{
   render() {
+    let player2 = this.props.player2Name ? this.props.player2Name + ' wins:' : 'cpu wins:'
+    let player1 = this.props.player1 + " wins:"
+
     return (
       <div className="statistic">
         <ul className="list-group">
@@ -158,16 +171,16 @@ class Statistic extends React.Component{
             <span className="badge badge-primary badge-pill"></span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center ">
-            Player1 wins: 
-            <span className="badge badge-primary badge-pill">12</span>
+            {player1}
+            <span className="badge badge-primary badge-pill">0</span>
           </li>  
-          <li className="list-group-item d-flex justify-content-between align-items-center">
-            Player2 wins: 
-            <span className="badge badge-primary badge-pill">4</span>
+          <li className="list-group-item d-flex justify-content-between align-items-center"> 
+            {player2}
+            <span className="badge badge-primary badge-pill">0</span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center">
             Draw:
-            <span className="badge badge-primary badge-pill">1</span>
+            <span className="badge badge-primary badge-pill">0</span>
           </li> 
 
         </ul>
