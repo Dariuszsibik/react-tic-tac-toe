@@ -18,20 +18,21 @@ class Game extends React.Component {
       playerName: '',
       player2Name: '',
       cpu: false,
-      xPlayer1: true
+      xPlayer1: true,
+      squares: Array(9).fill(null)
     };
     this.startGame = this.startGame.bind(this);
     this.playCpu = this.playCpu.bind(this);
     this.playHuman = this.playHuman.bind(this);
   }
 
-  startGame() {
+  startGame(e) {
+    console.log(e)
     let gracz1 = document.getElementById('player1').value;
     let gracz2 = document.getElementById('player2').value;
 
     (gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
-    this.setState({ playerName: gracz1})
-    this.setState({ mainMenu: false });
+    this.setState({ playerName: gracz1, mainMenu: false, squares: Array(9).fill(null) });
   }
 
   playCpu() {
@@ -63,16 +64,14 @@ class Game extends React.Component {
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length -1];
-    const squares = current.squares.slice();
+    const squares = this.state.squares.slice();
     
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
+      squares: squares,
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
@@ -87,8 +86,8 @@ class Game extends React.Component {
 
   render() {
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const current = this.state.squares;
+    let winner = calculateWinner(current);
     const moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
@@ -115,9 +114,9 @@ class Game extends React.Component {
       status = 'Next player: ' + (this.state.xIsNext ? xPlayer : oPlayer);
     }
 
-    let View = this.state.mainMenu ?
-      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} /> :
-      <Board squares={current.squares} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
+    let View = this.state.mainMenu || winner ?
+      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner}/> :
+      <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
 
     let History = this.state.mainMenu ? '' : <div className="history"><ul>{moves}</ul></div>
 
