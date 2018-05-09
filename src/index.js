@@ -19,20 +19,66 @@ class Game extends React.Component {
       player2Name: '',
       cpu: false,
       xPlayer1: true,
-      squares: Array(9).fill(null)
+      squares: Array(9).fill(null),
+      result: {    
+        player1Score: 0,
+        player2Score: 0,
+        draw: 0,
+      }
+,
     };
     this.startGame = this.startGame.bind(this);
     this.playCpu = this.playCpu.bind(this);
     this.playHuman = this.playHuman.bind(this);
+    this.nextRound = this.nextRound.bind(this);
   }
 
-  startGame(e) {
-    console.log(e)
+  startGame(props) {
+   if(props){
+    this.nextRound(props)
+    return;
+   } else {
     let gracz1 = document.getElementById('player1').value;
     let gracz2 = document.getElementById('player2').value;
 
     (gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
-    this.setState({ playerName: gracz1, mainMenu: false, squares: Array(9).fill(null) });
+    this.setState({ 
+      playerName: gracz1, 
+      mainMenu: false, 
+      squares: Array(9).fill(null) 
+    });
+  }}
+
+  nextRound(props) {
+    if (props === 'X') {
+    return  this.state.xPlayer1 ? 
+      this.setState({
+          squares: Array(9).fill(null),
+          result: Object.assign({}, 
+            this.state.result, { 
+              player1Score: this.state.result.player1Score + 1 
+            })})  : this.setState(
+          {result: Object.assign({}, 
+            this.state.result, { 
+              player2Score: this.state.result.player2Score + 1, 
+            })});
+    } if (props === 'O') {
+    return  this.state.xPlayer1 ? 
+      this.setState({
+        squares: Array(9).fill(null),
+        result: Object.assign({}, 
+          this.state.result, { 
+            player2Score: this.state.result.player2Score + 1 
+          })})  : this.setState({
+        result: Object.assign({}, 
+          this.state.result, { 
+            player1Score: this.state.result.player1Score + 1,
+          })});
+    } else {
+      console.log('draw');
+    } 
+
+      this.setState({ squares: Array(9).fill(null) });
   }
 
   playCpu() {
@@ -115,7 +161,7 @@ class Game extends React.Component {
     }
 
     let View = this.state.mainMenu || winner ?
-      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner}/> :
+      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner} playerName={this.state.playerName} player2Name={this.state.player2Name} xPlayer1={this.state.xPlayer1} mainMenu={this.state.mainMenu}/> :
       <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
 
     let History = this.state.mainMenu ? '' : <div className="history"><ul>{moves}</ul></div>
@@ -134,7 +180,7 @@ class Game extends React.Component {
               </div>
             </div>
               
-          <div className="col-sm-4"><Statistic player1={this.state.playerName} player2Name={this.state.player2Name} cpu={this.state.cpu}/></div>
+          <div className="col-sm-4"><Statistic result={this.state.result} player1={this.state.playerName} player2Name={this.state.player2Name} cpu={this.state.cpu}/></div>
         </div>
 
       </div>
@@ -171,15 +217,15 @@ class Statistic extends React.Component{
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center ">
             {player1}
-            <span className="badge badge-primary badge-pill">0</span>
+            <span className="badge badge-primary badge-pill">{this.props.result.player1Score}</span>
           </li>  
           <li className="list-group-item d-flex justify-content-between align-items-center"> 
             {player2}
-            <span className="badge badge-primary badge-pill">0</span>
+            <span className="badge badge-primary badge-pill">{this.props.result.player2Score}</span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center">
             Draw:
-            <span className="badge badge-primary badge-pill">0</span>
+            <span className="badge badge-primary badge-pill">{this.props.result.draw}</span>
           </li> 
 
         </ul>
