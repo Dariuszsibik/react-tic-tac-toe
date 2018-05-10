@@ -292,7 +292,7 @@ function calculateWinner(squares) {
       return squares[a];
     }
   }
-  return null;
+  return squares.some((i) => {return i === null}) ?  null :  'draw';
   }
 
 // ========================================
