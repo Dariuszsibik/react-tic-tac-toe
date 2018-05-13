@@ -9,9 +9,9 @@ class Game extends React.Component {
   constructor(props){
     super(props);
     this.state ={
-      history: [{
-        squares: Array(9).fill(null),
-      }],
+//      history: [{
+//        squares: Array(9).fill(null),
+//      }],
       stepNumber: 0,
       xIsNext: true,
       mainMenu: true,
@@ -24,6 +24,7 @@ class Game extends React.Component {
         player1Score: 0,
         player2Score: 0,
         draw: 0,
+        round: 1,
       }
 ,
     };
@@ -41,9 +42,10 @@ class Game extends React.Component {
     let gracz1 = document.getElementById('player1').value;
     let gracz2 = document.getElementById('player2').value;
 
-    (gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
+    //(gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
     this.setState({ 
       playerName: gracz1, 
+      player2Name: gracz2,
       mainMenu: false, 
       squares: Array(9).fill(null) 
     });
@@ -56,26 +58,46 @@ class Game extends React.Component {
           squares: Array(9).fill(null),
           result: Object.assign({}, 
             this.state.result, { 
-              player1Score: this.state.result.player1Score + 1 
-            })})  : this.setState(
+              player1Score: this.state.result.player1Score + 1,
+              round: this.state.result.round +1
+            }), 
+          stepNumber: 1
+        })  : this.setState(
           {result: Object.assign({}, 
             this.state.result, { 
               player2Score: this.state.result.player2Score + 1, 
-            })});
+              round: this.state.result.round +1
+            }),
+          stepNumber: 1 
+        });
     } if (props === 'O') {
     return  this.state.xPlayer1 ? 
       this.setState({
         squares: Array(9).fill(null),
         result: Object.assign({}, 
           this.state.result, { 
-            player2Score: this.state.result.player2Score + 1 
-          })})  : this.setState({
+            player2Score: this.state.result.player2Score + 1,
+            round: this.state.result.round +1
+          }),
+        stepNumber: 1
+      })  : this.setState({
         result: Object.assign({}, 
           this.state.result, { 
             player1Score: this.state.result.player1Score + 1,
-          })});
+            round: this.state.result.round +1
+          }),
+        stepNumber: 1
+      });
     } else {
-      console.log('draw');
+      this.setState({
+        squares: Array(9).fill(null),
+        result: Object.assign({}, 
+          this.state.result, { 
+            draw: this.state.result.draw + 1,
+            round: this.state.result.round +1
+          }),
+          stepNumber: 1
+      })
     } 
 
       this.setState({ squares: Array(9).fill(null) });
@@ -108,8 +130,7 @@ class Game extends React.Component {
   }
 
   handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length -1];
+//    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const squares = this.state.squares.slice();
     
     if (calculateWinner(squares) || squares[i]) {
@@ -118,32 +139,23 @@ class Game extends React.Component {
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       squares: squares,
-      stepNumber: history.length,
+      stepNumber: this.state.stepNumber + 1,
       xIsNext: !this.state.xIsNext,
     });
   }
 
+/*
   jumpTo(step) {
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
   }
+*/
 
   render() {
-    const history = this.state.history;
     const current = this.state.squares;
     let winner = calculateWinner(current);
-    const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start';
-        return (
-          <li key={move}>
-            <button onClick={() => this.jumpTo(move)}>{desc}</button>
-          </li>
-        );
-    });
     
     let xPlayer = this.state.xPlayer1 ? this.state.playerName : this.state.player2Name 
     let oPlayer;
@@ -161,10 +173,8 @@ class Game extends React.Component {
     }
 
     let View = this.state.mainMenu || winner ?
-      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner} playerName={this.state.playerName} player2Name={this.state.player2Name} xPlayer1={this.state.xPlayer1} mainMenu={this.state.mainMenu}/> :
-      <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName}/>
-
-    let History = this.state.mainMenu ? '' : <div className="history"><ul>{moves}</ul></div>
+      <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner} playerName={this.state.playerName} player2Name={this.state.player2Name} xPlayer1={this.state.xPlayer1} mainMenu={this.state.mainMenu} round={this.state.result.round} cpu={this.state.cpu} /> :
+      <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName} stepNumber={this.state.stepNumber} cpu={this.state.cpu}/>
 
     return (
       <div className="game">
@@ -212,7 +222,7 @@ class Statistic extends React.Component{
       <div className="statistic">
         <ul className="list-group">
           <li className="list-group-item d-flex  justify-content-between align-items-center active">
-            Statistics:
+            Round: {this.props.result.round}
             <span className="badge badge-primary badge-pill"></span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center ">
@@ -234,7 +244,28 @@ class Statistic extends React.Component{
 }
 
 class Board extends React.Component {
+  constructor(props){
+    super(props);
+    this.state ={
+      squares: Array(9).fill(null),
+    }
+  }
 
+  handleClick(i) {
+    //    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const squares = this.state.squares.slice();
+        
+        if (calculateWinner(squares) || squares[i]) {
+          return;
+        }
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        this.setState({
+          squares: squares,
+          stepNumber: this.state.stepNumber + 1,
+          xIsNext: !this.state.xIsNext,
+        });
+      }
+      
   renderSquare(i) {
     return (
       <Square
@@ -245,6 +276,10 @@ class Board extends React.Component {
   }
 
   render() {
+    if(this.props.cpu === true){
+      console.log(bestMovie(this.props.squares, this.props.stepNumber))
+    }
+    
     return (
       
       <div className="game-field">
@@ -295,7 +330,62 @@ function calculateWinner(squares) {
   return squares.some((i) => {return i === null}) ?  null :  'draw';
   }
 
-// ========================================
+ function bestMovie(squares, stepNumber) {
+  if(stepNumber < 3){
+      if(squares[4] === null) {
+        return 4;
+      } else {
+        return myListMovies(squares);
+      }
+  } else {
+      if(checkMove(squares) !== undefined ){
+        return checkMove(squares);
+      } else {
+        return myListMovies(squares);
+      }
+    }
+  }
+
+function checkMove(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i= 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+      let dangerous = oneIsNull(a, b, c, squares)
+      if (dangerous !== false) {
+        return dangerous;
+      }
+  }
+}
+
+function myListMovies(squares) {
+  const arr = [4, 0, 2, 8, 6, 3, 5, 1, 7]
+  for (let i=0; i < arr.length; i++) {
+      if(squares[arr[i]] === null) {
+       return arr[i]
+      } 
+  }
+}
+function oneIsNull(a, b, c, arr) {
+  if (arr[a] === null && arr[b] === arr[c] && arr[b] !== null){
+    return a;
+  } if (arr[b] === null && arr[a] === arr[c] && arr[c] !== null){
+    return b;
+  } if (arr[c] === null && arr[b] === arr[a] && arr[a] !== null){
+    return c;
+  } else {
+    return false;
+  }
+}
+// =======================================
 
 ReactDOM.render(
   <Game />,
