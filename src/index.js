@@ -12,7 +12,7 @@ class Game extends React.Component {
 //      history: [{
 //        squares: Array(9).fill(null),
 //      }],
-      stepNumber: 0,
+      stepNumber: 1,
       xIsNext: true,
       mainMenu: true,
       playerName: '',
@@ -170,11 +170,18 @@ class Game extends React.Component {
       status = 'Winner: ' + winner;
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? xPlayer : oPlayer);
+          if(this.state.cpu === true && status === "Next player: Cpu"){
+            let cpuBestMovie = bestMovie(this.state.squares, this.state.stepNumber,this.state.xIsNext);
+            this.setState({
+              squares: cpuBestMovie,
+              xIsNext: !this.state.xIsNext,
+            })
+          }
     }
 
     let View = this.state.mainMenu || winner ?
       <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner} playerName={this.state.playerName} player2Name={this.state.player2Name} xPlayer1={this.state.xPlayer1} mainMenu={this.state.mainMenu} round={this.state.result.round} cpu={this.state.cpu} /> :
-      <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName} stepNumber={this.state.stepNumber} cpu={this.state.cpu}/>
+      <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName} stepNumber={this.state.stepNumber} cpu={this.state.cpu} xIsNext={this.state.xIsNext} xPlayer1={this.state.xPlayer1}/>
 
     return (
       <div className="game">
@@ -247,7 +254,7 @@ class Board extends React.Component {
   constructor(props){
     super(props);
     this.state ={
-      squares: Array(9).fill(null),
+//      squares: Array(9).fill(null),
     }
   }
 
@@ -276,9 +283,6 @@ class Board extends React.Component {
   }
 
   render() {
-    if(this.props.cpu === true){
-      console.log(bestMovie(this.props.squares, this.props.stepNumber))
-    }
     
     return (
       
@@ -330,20 +334,26 @@ function calculateWinner(squares) {
   return squares.some((i) => {return i === null}) ?  null :  'draw';
   }
 
- function bestMovie(squares, stepNumber) {
+ function bestMovie(squares, stepNumber, xIsNext) {
+
+  let number;
   if(stepNumber < 3){
       if(squares[4] === null) {
-        return 4;
+        number = 4;
       } else {
-        return myListMovies(squares);
+        number = myListMovies(squares);
       }
   } else {
       if(checkMove(squares) !== undefined ){
-        return checkMove(squares);
+        number = checkMove(squares);
       } else {
-        return myListMovies(squares);
+        number = myListMovies(squares);
       }
     }
+
+    const newSquares = squares.slice();    
+    newSquares[number] = xIsNext ? 'X' : 'O';
+    return newSquares
   }
 
 function checkMove(squares) {
