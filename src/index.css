@@ -3,6 +3,7 @@ body {
   margin: 20px;
 }
 
+
 .board-row:after {
   clear: both;
   content: "";
@@ -36,7 +37,7 @@ body {
 }
 
 .square {
-  background-color: #9A8297;
+  background-color: #28a745;
   margin: 5px;
   width: 90px;
   height: 90px;
@@ -47,6 +48,43 @@ body {
 
 }
 
+.navbar-text, .round {
+  width: 100%;
+}
+
+.result {
+background: #28a745;
+width: 40px;
+}
+
+.result-number {
+color: white;
+text-align: center;
+margin-bottom: 0px;
+font-weight: bold;
+}
+
+.tic-tac-field {
+background: #EEE;
+}
+
+.list-group-item {
+  background: #EEE;
+}
+
+.game-field {
+  background: white;
+}
+
+.next-player {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.navbar {
+  border: 1px solid white;
+}
 
 .hide {
   display: none;
@@ -56,22 +94,22 @@ body {
   display: display;
 }
 
-.square {
-  border: 1px solid black;
+.square:hover {
+  border: 3px solid #007bff;
 }
 
-.statistic {
-  border: 1px solid black;
+.clicked {
+  background: #007bff;
 }
 
-.tic-tac-field {
-  border: 1px solid black;
+span.O {
+  color: red;
+  font-size: 50px;
+  font-weight: bold;
 }
 
-.col-sm-8 {
-  border: 1px solid black;
-}
-
-.col-sm-4 {
-  border: 1px solid black;
+span.X {
+  color: white;
+  font-size: 50px;
+  font-weight: bold;
 }

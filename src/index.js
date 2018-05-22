@@ -9,9 +9,6 @@ class Game extends React.Component {
   constructor(props){
     super(props);
     this.state ={
-//      history: [{
-//        squares: Array(9).fill(null),
-//      }],
       stepNumber: 1,
       xIsNext: true,
       mainMenu: true,
@@ -42,7 +39,6 @@ class Game extends React.Component {
     let gracz1 = document.getElementById('player1').value;
     let gracz2 = document.getElementById('player2').value;
 
-    //(gracz2.length > 0) ? this.setState({ player2Name: gracz2 }) : this.setState({ player2Name: false})
     this.setState({ 
       playerName: gracz1, 
       player2Name: gracz2,
@@ -130,9 +126,8 @@ class Game extends React.Component {
   }
 
   handleClick(i) {
-//    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const squares = this.state.squares.slice();
     
+    const squares = this.state.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
@@ -143,15 +138,6 @@ class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
     });
   }
-
-/*
-  jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
-  }
-*/
 
   render() {
     const current = this.state.squares;
@@ -179,14 +165,16 @@ class Game extends React.Component {
           }
     }
 
+    let header = this.state.mainMenu ? '' : <Header gracz1={this.state.playerName} gracz2={this.state.player2Name} xPlayer1={this.state.xPlayer1}/> 
+
     let View = this.state.mainMenu || winner ?
       <ModalClass startGame={this.startGame} playHuman={this.playHuman} playCpu={this.playCpu} winner={winner} playerName={this.state.playerName} player2Name={this.state.player2Name} xPlayer1={this.state.xPlayer1} mainMenu={this.state.mainMenu} round={this.state.result.round} cpu={this.state.cpu} /> :
       <Board squares={current} onClick={(i) => this.handleClick(i)} status={status} player2Name={this.state.player2Name} playerName={this.state.playerName} stepNumber={this.state.stepNumber} cpu={this.state.cpu} xIsNext={this.state.xIsNext} xPlayer1={this.state.xPlayer1}/>
 
     return (
       <div className="game">
-          <nav className="navbar navbar-dark bg-primary"><span className="navbar-text">
-            <Header gracz1={this.state.playerName}/>
+          <nav className="navbar navbar-dark bg-primary "><span className="navbar-text">
+            {header}
             </span>
             </nav> 
     
@@ -206,18 +194,23 @@ class Game extends React.Component {
 }}
 
 function Square(props) {
+  console.log(props)
+  let clicked = props.value? 'square clicked' : 'square';
   return (
-    <button className="square" onClick={props.onClick}>
-      {props.value}
+    <button className={clicked} onClick={props.onClick}>
+    <span className={props.value}>{props.value}</span>
     </button>
   )
 }
 
 class Header extends React.Component{
   render() {
+    const oponent = this.props.gracz2 ? this.props.gracz2 : 'CPU' ;
+    let player1 = this.props.xPlayer1? 'X' : 'O';
+    let player2 = this.props.xPlayer1? 'O' : 'X';
     return (
-      <div>Nazwa - {this.props.gracz1}</div>
-    )}
+       <h3 className="bg-primary text-white text-center" ><span class={player1}>{this.props.gracz1}</span> VS <span class={player2}>{oponent} </span></h3>
+        )}
 }
 
 class Statistic extends React.Component{
@@ -229,20 +222,20 @@ class Statistic extends React.Component{
       <div className="statistic">
         <ul className="list-group">
           <li className="list-group-item d-flex  justify-content-between align-items-center active">
-            Round: {this.props.result.round}
+            <h4 className="round text-center">Round: {this.props.result.round}</h4>
             <span className="badge badge-primary badge-pill"></span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center ">
-            {player1}
-            <span className="badge badge-primary badge-pill">{this.props.result.player1Score}</span>
+            <h5>{player1}</h5>
+            <span className="badge badge-primary badge-pill text-center border border-primary result"><h5  className="result-number">{this.props.result.player1Score}</h5></span>
           </li>  
           <li className="list-group-item d-flex justify-content-between align-items-center"> 
-            {player2}
-            <span className="badge badge-primary badge-pill">{this.props.result.player2Score}</span>
+            <h5>{player2} </h5>
+            <span className="badge badge-primary badge-pill border border-primary result"><h5  className="result-number">{this.props.result.player2Score}</h5></span>
           </li> 
           <li className="list-group-item d-flex justify-content-between align-items-center">
-            Draw:
-            <span className="badge badge-primary badge-pill">{this.props.result.draw}</span>
+            <h5>Draw:</h5>
+            <span className="badge badge-primary badge-pill border border-primary result"><h5 className="result-number">{this.props.result.draw}</h5></span>
           </li> 
 
         </ul>
@@ -254,24 +247,8 @@ class Board extends React.Component {
   constructor(props){
     super(props);
     this.state ={
-//      squares: Array(9).fill(null),
     }
   }
-
-  handleClick(i) {
-    //    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const squares = this.state.squares.slice();
-        
-        if (calculateWinner(squares) || squares[i]) {
-          return;
-        }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
-        this.setState({
-          squares: squares,
-          stepNumber: this.state.stepNumber + 1,
-          xIsNext: !this.state.xIsNext,
-        });
-      }
       
   renderSquare(i) {
     return (
@@ -288,7 +265,7 @@ class Board extends React.Component {
       
       <div className="game-field">
         <div className="game-info">
-        <div>{this.props.status}</div>
+        <div className="text-center bg-success"><span className="next-player">{this.props.status}</span></div>
         </div>
 
         <div className="game-board">
