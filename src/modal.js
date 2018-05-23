@@ -27,13 +27,15 @@ class ModalClass extends React.Component {
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>Tic Tac Toe</ModalHeader>
           <ModalBody>
-          <p className="toHide">Please choose your opponent:</p>
-          <label className="hide" id="p1">Podaj swoje imię <input id="player1" type="tekst"/></label>
-          <label className="hide">Podaj swoje imię <input id="player2" type="tekst"/></label>
+          <h5 className="text-center toHide">Please choose your opponent</h5>
+
+
+            <label for="player1" className="col-form-label hide" id="p1">Podaj swoje imię ( X ) <input type="text" id="player1" className="form-control" /></label>
+            <label for="player2" className="col-form-label hide" id="p1">Podaj swoje imię ( O ) <input type="text" id="player2" className="form-control" /></label>
           </ModalBody>
           <ModalFooter>
             <Button color="primary toHide" onClick={this.props.playCpu} >CPU</Button>
-            <Button color="secondary toHide" onClick={this.props.playHuman}>Human</Button>
+            <Button color="success toHide" onClick={this.props.playHuman}>Human</Button>
             <Button color="primary hide" id="hideButton" onClick={() => this.props.startGame()}>Play</Button>
           </ModalFooter>
         </Modal>
