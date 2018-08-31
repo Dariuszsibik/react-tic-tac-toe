@@ -36,4 +36,4 @@ Runs the app in the development mode.<br>
 Builds the app for production to the `build` folder.<br>
 
 ## Sending Feedback
-We are always open to [your feedback](https://github.com/Dariuszsibik/resume-react/issues).
+We are always open to [your feedback](https://github.com/Dariuszsibik/react-tic-tac-toe/issues).
