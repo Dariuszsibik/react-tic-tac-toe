@@ -6,20 +6,19 @@ A React implementation of Tic Tac Toe for one or two players.
 
 
 ## Used technologies:
-#### - react: 16.4.1
+#### - react: "^16.3.2",
 #### - JSX
 #### - JavaScript
-#### - Bootstrap 
+#### - bootstrap 4
+#### - jQuery
 #### - CSS
-#### - RWD
 
 
 ## Dependencies
-#### classnames: 2.2.6
-#### gh-pages: 1.2.0
-#### i18next: 11.3.3
-#### i18next-xhr-backend: 1.5.1
-#### react-i18next: 7.7.0
+#### - webpack
+#### - reactstrap 
+#### - popper.js
+
 
     
 ## Download
