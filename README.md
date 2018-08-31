@@ -2,7 +2,7 @@
 A React implementation of Tic Tac Toe for one or two players.
 
 ## Demo & Examples
-[dariuszsibik.github.io](https://dariuszsibik.github.io).
+[dariuszsibik.github.io/react-tic-tac-toe](https://dariuszsibik.github.io/react-tic-tac-toe/).
 
 
 ## Used technologies:
